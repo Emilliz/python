@@ -1,29 +1,29 @@
-import unittest
 
 def rabin_karp(text, pattern):
-    result = []
-    pattern_sum = sum(ord(s) for s in pattern)
-    pattern_length = len(pattern) 
+    pattern_heshe = heshe(pattern)
+    pattern_length = len(pattern)
     text_length = len(text)
-    if pattern_length == 0:
-        text_length -= 1
+    part_hesh = heshe(text[0:pattern_length])
+    prime_multiplyer = 113 ** pattern_length
     result = []
-    check = False
-
-    for i in range(text_length - pattern_length + 1):
-        part = text[i:(pattern_length + i)]
-        text_sum = sum(ord(s) for s in part)
-        if pattern_sum == text_sum:
-            for j in range(len(part) + 1):
-                if part[j:j+1] == pattern[j:j+1]:
-                    check = True
-                else:
-                    check = False
-                    break
-            if check is True:
-                result.append(i)
+    for i in range(text_length - (pattern_length - (pattern_length != 0))):
+        if pattern_heshe == part_hesh:
+            result += [i]
+        if i != text_length - pattern_length:
+            part_hesh = (113 * part_hesh - prime_multiplyer * heshe(text[i]) + heshe(text[i + pattern_length])) % 2 ** 32
     return result
+import unittest
 
+
+
+
+
+def heshe(el_stroka: str):
+    hasha = 0
+    m = len(el_stroka)
+    for i in range(len(el_stroka)):
+        hasha += (113 ** (m - i)) * ord(el_stroka[i])
+    return hasha% 2**32
 
 class RabinKarpTest(unittest.TestCase):
     """Тесты для метода Рабина-Карпа"""
