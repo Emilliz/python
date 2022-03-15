@@ -1,5 +1,5 @@
+#cython: language_level=3
 import numpy as np
-
 from numpy import array
 from numpy.linalg import norm
 from numpy.linalg import solve as solve_out_of_the_box
@@ -14,6 +14,8 @@ a = array([
 b = array([5.0, 6.0, 7.0, 8.0], dtype = float)
 
 n = len(a)
+
+print("no seg fault")
 
 def vector_gauss(a, b):
     a = a.copy()
