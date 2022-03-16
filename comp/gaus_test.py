@@ -1,15 +1,15 @@
-#!python
-
-import time
+import timeit
 import numpy as np
 import gaus
 from numpy.linalg import solve as solve_out_of_the_box
 
 
-def vector_gauss(a, b, n):
+def vector_gauss(a, b):
     a = a.copy()
     b = b.copy()
-    for  j in range(n - 1):
+    n = len(a)
+
+    for j in range(n - 1):
         for i in range(j + 1, n):
             frac = a[i, j] / a[j, j]
             a[i, j + 1:n] -= a[j, j + 1:n] * frac
@@ -17,6 +17,7 @@ def vector_gauss(a, b, n):
 
     for i in range(n - 1, -1, -1):
         b[i] = (b[i] - np.dot(a[i, i + 1:n], b[i + 1:n])) / a[i, i]
+
     return b
 
 
@@ -26,36 +27,35 @@ def main():
         [3.0, 2.0, 4.8, 1.0],
         [1.0, 6.0, 5.8, 4.0],
         [2.0, 1.0, 4.0, 3.0]
-    ], dtype = float)
+    ], dtype=float)
+    b = np.array([5.0, 6.0, 7.0, 8.0], dtype=float)
 
-    b = np.array([5.0, 6.0, 7.0, 8.0], dtype = float)
+    iterations = 100000
+    cython_time = timeit.timeit(
+        stmt=lambda: gaus.vector_gauss(
+            a, b), number=iterations)
+    no_cython_time = timeit.timeit(
+        stmt=lambda: vector_gauss(
+            a, b), number=iterations)
+    obb_time = timeit.timeit(
+        stmt=lambda: solve_out_of_the_box(
+            a, b), number=iterations)
 
-    n = len(a)
-
-
-    t1 = time.time()
-    solution_no_cython = vector_gauss(a, b, n)
-    t2 = time.time()
-    no_cython_time = t2 - t1
-
-    t1 = time.time()
-    solution_cython = gaus.vector_gauss(a, b, n)
-    t2 = time.time()
-    cython_time = t2 - t1
-
-    t1 = time.time()
+    solution_no_cython = vector_gauss(a, b)
+    solution_cython = gaus.vector_gauss(a, b)
     solution_obb = solve_out_of_the_box(a, b)
-    t2 = time.time()
-    obb_time = t2 - t1
 
+    print("### time for {} iterations (seconds) ###".format(iterations))
     print("no_cython_time:", round(no_cython_time, 6))
     print("cython_time   :", round(cython_time, 6))
     print("oob_time      :", round(obb_time, 6))
-    print()
+
+    print("\n### deviation ###")
     print("max deviation cython   :", np.linalg.norm(
         solution_cython - solution_obb, ord=1))
     print("max deviation no cython:", np.linalg.norm(
         solution_no_cython - solution_obb, ord=1))
+
 
 if __name__ == "__main__":
     main()
