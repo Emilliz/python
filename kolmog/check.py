@@ -9,10 +9,12 @@ script_directory = os.path.dirname(os.path.abspath(__file__))
 source_file = os.path.join(script_directory , "source_file.csv")
 
 data = pandas.read_csv(str(source_file))
-data["measurement_value"].plt(kind="bar")
+print(data.head())
+print(data["value"])
+data["value"].plot(kind="bar")
 
 data_frame = pandas.DataFrame(data={
-    "value": data["measurement_value"]
+    "value": data["value"]
 })
 
 print(stats.kstest(data_frame["value"],
