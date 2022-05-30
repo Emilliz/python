@@ -6,6 +6,7 @@ from flask import Flask, request
 
 app = Flask(__name__, static_folder="static", static_url_path="", template_folder="templates")
 
+username = None
 
 @app.context_processor
 def inject_globals():
@@ -27,25 +28,32 @@ def inject_globals():
 @app.route('/')
 def root():
     return flask.render_template(
-        'index.html'
+        'index.html',
+        username=username
     )
-
 
 @app.route('/name', methods = ['GET', 'POST'])
 def hello_name():
-    if request.method == 'GET':
-        name_param=request.args.get('name')
-    elif request.method == 'POST':
+    global username
+    
+    if request.method == 'POST':
         name_param=request.form.get('name')
+        username = name_param
+        return flask.render_template(
+            'index.html',
+            username=username
+        )
+    elif request.method == 'GET':
+        if username is None:
+            name_param="Гость"
+        else:
+            name_param = username   
 
-    if name_param is None:
-        name_param="Анонимус"
-
-    return flask.render_template(
-        'surprise.html',
-        name=name_param,
-        method=request.method
-    )
+        return flask.render_template(
+            'surprise.html',
+            name=name_param,
+            method=request.method
+        )
 
 if __name__ == '__main__':
    app.run(debug = True)

@@ -1,21 +1,21 @@
 <html lang="ru">
   <head>
     <meta charset="utf-8" />
-    <title>Что по поступлению?</title>
+    <title>Представьтесь, пожалуйста</title>
   </head>
   <body>
     <p>Hello, {{name}}!</p>
 
     <p>Method used: {{method}}</p>
 
-    <form action="/name" method="GET">
-      <input type="text" value="и снова {{name}}" name="name" />
-      <input type="submit" value="Хочешь поступить?">
+    <form action="/name" method="POST">
+      <input type="text" value="{{name}}" name="name" />
+      <input type="submit" value="Мне нужно имя!">
     </form>
 
     <form action="/name" method="POST">
-      <input type="text" value="и снова {{name}}" name="name" />
-      <input type="submit" value="Хочешь устроиться?">
+      <input type="text" value="{{name}}" name="name" />
+      <input type="submit" value="Как к вам обращаться?">
     </form>
   </body>
 </html>
